@@ -1,5 +1,6 @@
 package uz.nt.uzumproject.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.nt.uzumproject.dto.ResponseDto;

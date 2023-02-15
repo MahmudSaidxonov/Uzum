@@ -1,5 +1,6 @@
 package uz.nt.uzumproject.rest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.nt.uzumproject.dto.ResponseDto;
@@ -12,7 +13,7 @@ import uz.nt.uzumproject.service.UsersService;
 public class UsersResources {
     private final UsersService usersService;
     @PostMapping
-    public ResponseDto<UsersDto> addUsers(@RequestBody UsersDto usersDto) {
+    public ResponseDto<UsersDto> addUsers(@RequestBody @Valid UsersDto usersDto) {
         return usersService.addUser(usersDto);
     }
 
