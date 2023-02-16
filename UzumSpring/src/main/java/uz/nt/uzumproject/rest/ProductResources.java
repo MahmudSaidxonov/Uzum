@@ -1,5 +1,6 @@
 package uz.nt.uzumproject.rest;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.nt.uzumproject.dto.ProductDto;
@@ -30,7 +31,8 @@ public class ProductResources {
         return productService.getAllProducts();
     }
     @GetMapping("by-id")
-    public ResponseDto<ProductDto>getProductById(@RequestParam Integer id){
+    public ResponseDto<ProductDto>getProductById(@RequestParam Integer id, HttpServletRequest req){
+        String authorization = req.getHeader("Authorization");
         return productService.getProductById(id);
     }
 
