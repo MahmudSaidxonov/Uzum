@@ -8,7 +8,7 @@ import uz.nt.uzumproject.dto.UsersDto;
 import uz.nt.uzumproject.service.UsersService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("user")
 @RequiredArgsConstructor
 public class UsersResources {
     private final UsersService usersService;
@@ -25,5 +25,11 @@ public class UsersResources {
     @GetMapping("by-phone-number")
     public ResponseDto<UsersDto> getUserByPhoneNumber(@RequestParam String phoneNumber){
         return usersService.getUserByPhoneNumber(phoneNumber);
+    }
+    @GetMapping
+    public ResponseDto<UsersDto> getAll() {
+        return ResponseDto.<UsersDto>builder()
+                .message("Hi")
+                .build();
     }
 }

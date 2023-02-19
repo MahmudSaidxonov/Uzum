@@ -21,4 +21,6 @@ public class UsersDto {
     @IsValidGender
     private String gender;
     private Date birthDate;
+    private String password;
+    private Boolean enabled;
 }
