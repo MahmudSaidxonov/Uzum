@@ -2,27 +2,40 @@ package uz.nt.uzumproject.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.nt.uzumproject.dto.LoginDto;
 import uz.nt.uzumproject.dto.ResponseDto;
 import uz.nt.uzumproject.dto.UsersDto;
+import uz.nt.uzumproject.model.Authorities;
 import uz.nt.uzumproject.model.Users;
+import uz.nt.uzumproject.repository.AuthorityRepository;
 import uz.nt.uzumproject.repository.UsersRepository;
+import uz.nt.uzumproject.security.JwtService;
+import uz.nt.uzumproject.security.UserAuthorities;
 import uz.nt.uzumproject.service.mapper.UserMapper;
+import uz.nt.uzumproject.service.validator.AppStatusCodes;
+import uz.nt.uzumproject.service.validator.AppStatusMessages;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UsersService {
+public class UsersService implements UserDetailsService {
+
+    private final AuthorityRepository authorityRepository;
     private final UsersRepository usersRepository;
     private final UserMapper userMapper;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
     public ResponseDto<UsersDto> addUser(UsersDto dto) {
         Users users = userMapper.toEntity(dto);
         usersRepository.save(users);
 //        users.setPassword(passwordEncoder.encode(dto.getPassword()));
-
+//        authorityRepository.save(new Authorities(users.getUsername(), UserAuthorities.READ));
         return ResponseDto.<UsersDto>builder()
                 .success(true)
                 .data(userMapper.toDto(users))
@@ -87,5 +100,29 @@ public class UsersService {
                         .message("User with phone number " + phoneNumber + " is not found")
                         .code(-1)
                         .build());
+    }
+
+    @Override
+    public UsersDto loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Users> users = usersRepository.findFirstByEmail(username);
+        if (users.isEmpty()) throw new UsernameNotFoundException("User with email " +  username + " is not found");
+
+        return userMapper.toDto(users.get());
+    }
+
+    public ResponseDto<String> login(LoginDto loginDto) {
+        UsersDto users = loadUserByUsername(loginDto.getUsername());
+        if (!passwordEncoder.matches(loginDto.getPassword(), users.getPassword())) {
+            return ResponseDto .<String>builder()
+                    .message("Password is not correct")
+                    .code(AppStatusCodes.VALIDATION_ERROR_CODE)
+                    .build();
+        }
+
+        return ResponseDto.<String>builder()
+                .success(true)
+                .message(AppStatusMessages.OK)
+                .data(jwtService.generateToken(users))
+                .build();
     }
 }

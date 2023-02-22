@@ -3,6 +3,7 @@ package uz.nt.uzumproject.rest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import uz.nt.uzumproject.dto.LoginDto;
 import uz.nt.uzumproject.dto.ResponseDto;
 import uz.nt.uzumproject.dto.UsersDto;
 import uz.nt.uzumproject.service.UsersService;
@@ -31,5 +32,10 @@ public class UsersResources {
         return ResponseDto.<UsersDto>builder()
                 .message("Hi")
                 .build();
+    }
+
+    @GetMapping("login")
+    public ResponseDto<String> login(@RequestBody LoginDto loginDto) {
+        return usersService.login(loginDto);
     }
 }
