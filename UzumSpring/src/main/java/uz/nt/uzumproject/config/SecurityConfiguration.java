@@ -22,10 +22,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 import org.postgresql.Driver;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import uz.nt.uzumproject.dto.ResponseDto;
 import uz.nt.uzumproject.security.JwtFilter;
 import uz.nt.uzumproject.service.UsersService;
 import uz.nt.uzumproject.service.validator.AppStatusCodes;
+
+import java.util.List;
 
 
 @Configuration
@@ -77,8 +82,11 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         return http
                 .csrf().disable()
+                .cors().configurationSource(configurationSource())
+                .and()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/user").permitAll()
                 .requestMatchers("/user/login").permitAll()
@@ -89,6 +97,18 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
+    }
+
+    private CorsConfigurationSource configurationSource() {
+        CorsConfiguration cors = new CorsConfiguration();
+    cors.setAllowedHeaders(List.of("SECRET-HEADER", "Authorization", "Access-Control-Allow-Origin", "Content-Type"));
+        cors.addAllowedMethod("*");
+        cors.addAllowedOrigin("null");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cors);
+
+        return source;
     }
 
     private AuthenticationEntryPoint entryPoint() {

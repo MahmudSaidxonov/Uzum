@@ -25,4 +25,9 @@ public class CategoryResources {
     public ResponseDto<List<CategoryDto>> listCategory(@RequestParam Integer categoryId) {
         return categoryService.listCategory(categoryId);
     }
+
+    @GetMapping("/all")
+    public ResponseDto<List<CategoryDto>> all() {
+        return categoryService.allCategory();
+    }
 }

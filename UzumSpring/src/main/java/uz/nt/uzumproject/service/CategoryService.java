@@ -79,4 +79,14 @@ public class CategoryService {
                 .data(list.stream().map(categoryMapper::toDto).collect(Collectors.toList()))
                 .build();
     }
+
+    public ResponseDto<List<CategoryDto>> allCategory() {
+        List<Category> list = new ArrayList<>(categoryRepository.findAllByParentIdIsNotNull());
+        return  ResponseDto.<List<CategoryDto>>builder()
+                .message(OK)
+                .code(OK_CODE)
+                .success(true)
+                .data(list.stream().map(categoryMapper::toDto).collect(Collectors.toList()))
+                .build();
+    }
 }
