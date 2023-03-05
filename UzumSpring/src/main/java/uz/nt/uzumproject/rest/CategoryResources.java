@@ -21,13 +21,13 @@ public class CategoryResources {
         return categoryService.addCategory(categoryDto);
     }
 
-    @GetMapping
-    public ResponseDto<List<CategoryDto>> listCategory(@RequestParam Integer categoryId) {
-        return categoryService.listCategory(categoryId);
-    }
-
-    @GetMapping("/all")
-    public ResponseDto<List<CategoryDto>> all() {
-        return categoryService.allCategory();
-    }
+//    @GetMapping
+//    public ResponseDto<List<CategoryDto>> listCategory(@RequestParam Integer categoryId) {
+//        return categoryService.listCategory(categoryId);
+//    }
+//
+//    @GetMapping("/all")
+//    public ResponseDto<List<CategoryDto>> all() {
+//        return categoryService.allCategory();
+//    }
 }

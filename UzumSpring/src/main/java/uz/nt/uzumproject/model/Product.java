@@ -2,7 +2,9 @@ package uz.nt.uzumproject.model;
 
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,6 +12,12 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@NamedQuery(query = "select p from Product p where coalesce(:id, id) = id " +
+        "and coalesce(:name, name) = name " +
+        "and coalesce(:price, price) = price " +
+        "and coalesce(:amount, amount) = amount", name = "findProductById")
 public class Product {
     @Id
     @GeneratedValue(generator = "productIdSeq")
@@ -19,7 +27,7 @@ public class Product {
     private Integer price;
     private Integer amount;
     private String description;
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<Image> images;
     @ManyToOne
     private Category category;

@@ -23,6 +23,6 @@ public class CategoryDto {
 //    @NotNull(message = NULL_VALUE)
     @Max(value = 500, message = SIZE_MISMATCH)
     private Integer parentId;
-    private List<CategoryDto> subCategories;
+
 
 }

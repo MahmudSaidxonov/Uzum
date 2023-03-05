@@ -9,8 +9,4 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @EnableRedisRepositories
 public class AppConfig {
 
-    @Bean
-    public Gson gson() {
-        return new Gson();
-    }
 }
